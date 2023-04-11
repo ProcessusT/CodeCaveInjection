@@ -31,17 +31,10 @@ LPVOID find_code_cave_in_section(LPBYTE section_base, DWORD section_size, DWORD 
 
 
 
-
+// Take the relative virtual address and calculate the offset
 DWORD RVA2Offset(DWORD rva, PIMAGE_SECTION_HEADER section_header) {
     return rva - section_header->VirtualAddress + section_header->PointerToRawData;
 }
-
-
-
-
-
-
-
 
 
 
@@ -116,18 +109,7 @@ int main(int argc, char* argv[])
             // Get the RVA of the entry point
             DWORD entry_point_rva = nt_headers->OptionalHeader.AddressOfEntryPoint;
 
-            // Calculate the offset of the entry point from the beginning of the file
-            DWORD entry_point_offset = 0;
-            for (int i = 0; i < nt_headers->FileHeader.NumberOfSections; i++)
-            {
-                if (entry_point_rva >= section_header[i].VirtualAddress &&
-                    entry_point_rva < section_header[i].VirtualAddress + section_header[i].Misc.VirtualSize)
-                {
-                    entry_point_offset = section_header[i].PointerToRawData + (entry_point_rva - section_header[i].VirtualAddress);
-                    break;
-                }
-            }
-
+           
             
             // On récupère le point d'entrée relatif actuel du fichier PE
             DWORD entryPointRva = nt_headers->OptionalHeader.AddressOfEntryPoint;
