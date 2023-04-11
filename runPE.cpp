@@ -31,7 +31,7 @@ LPVOID find_code_cave_in_section(LPBYTE section_base, DWORD section_size, DWORD 
 
 
 
-// Take the relative virtual address and calculate the offset
+
 DWORD RVA2Offset(DWORD rva, PIMAGE_SECTION_HEADER section_header) {
     return rva - section_header->VirtualAddress + section_header->PointerToRawData;
 }
@@ -41,9 +41,16 @@ DWORD RVA2Offset(DWORD rva, PIMAGE_SECTION_HEADER section_header) {
 
 
 
+
+
+
+
+
+
+
 int main(int argc, char* argv[])
 {
-    LPCSTR arg1 = "C:\\mimikatz.exe";
+    LPCSTR arg1 = "C:\\Users\\Nobody\\OneDrive - GROUPE ISAGRI\\red\\chat\\mimikatz.exe";
 
 
     printf("[+]\tLoading original file\n");
@@ -106,10 +113,8 @@ int main(int argc, char* argv[])
             printf("[+]\tCode cave found in section %s\n", section_header->Name);
 
 
-            // Get the RVA of the entry point
-            DWORD entry_point_rva = nt_headers->OptionalHeader.AddressOfEntryPoint;
+            
 
-           
             
             // On récupère le point d'entrée relatif actuel du fichier PE
             DWORD entryPointRva = nt_headers->OptionalHeader.AddressOfEntryPoint;
@@ -145,9 +150,11 @@ int main(int argc, char* argv[])
             BYTE bytes[5];
             memcpy(bytes, entryPoint, 5);
             // Affichage des 5 premiers bytes via un printf
+            printf("[+]\tNew entry point value : ");
             for (int i = 0; i < 5; i++) {
-                printf("[+]\tNew entry point value : %02X ", bytes[i]);
+                printf("%02X", bytes[i]);
             }
+            printf("\n");
 
 
             printf("[+]\tApplying new entryPoint in PE header\n");
